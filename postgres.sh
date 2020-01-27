@@ -5,7 +5,7 @@
 sudo docker stop $(sudo docker ps | grep postgres | awk -F " " '{print $1}')
 sudo docker rm --force postgres || true
 
-echo "Creating database container (and seed  database)"
+echo "Creating database container with DB"
 sudo docker run -d \
   --name postgres \
   -e POSTGRES_USER=$DB_USERNAME \
@@ -16,7 +16,7 @@ sudo docker run -d \
   --restart always \
   postgres
 
-sleep 20 # Ensure enough time for postgres database to initialize and create role
+sleep 20 
 
 sudo docker exec -i postgres psql -U $DB_USERNAME -d $DB_NAME <<-EOF
 create table users (
