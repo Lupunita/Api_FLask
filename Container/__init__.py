@@ -31,6 +31,7 @@ def create_new_session():
     sessionID=secrets.token_hex(30)
     sessionID_hashed_b = str(bcrypt.generate_password_hash(sessionID).decode("utf-8"))
     
+    #bcrypt.check_password_hash(pw_hash, 'hunter2')
     
     
     session=SessionManager(session=sessionID_hashed_b)
