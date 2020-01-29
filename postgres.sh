@@ -1,24 +1,21 @@
 #!/bin/sh
 
 
+export APP_SETTINGS="config.DevelopmentConfig"
+export DB_USERNAME='postgres'
+export DB_PASSWORD='securepassword'
+export DB_HOST='0.0.0.0'
+export DB_PORT='5432'
+export FLASK_ENV='development'
+export FLASK_APP='.'
+export SECRET_KEY='wFwb4353GFuLF2U1vc3MgaXMgYSBo2'
+export DB_NAME='testovacka'
 
-sudo docker stop $(sudo docker ps | grep postgres | awk -F " " '{print $1}')
-sudo docker rm --force postgres || true
 
-echo "Creating database container with DB"
-sudo docker run -d \
-  --name postgres \
-  -e POSTGRES_USER=$DB_USERNAME \
-  -e POSTGRES_PASSWORD=$DB_PASSWORD \
-  -e POSTGRES_DB=$DB_NAME \
-  -p 80:5432 \
-  -p 5432:5432 \
-  --restart always \
-  postgres
 
-sleep 20 
+psql -U postgres -c "create database $DB_NAME;"
 
-sudo docker exec -i postgres psql -U $DB_USERNAME -d $DB_NAME <<-EOF
+psql -U postgres -d $DB_NAME <<-EOF
 create table users (
   id serial PRIMARY KEY NOT NULL,
   username VARCHAR(80) NOT NULL,
@@ -26,7 +23,7 @@ create table users (
 );
 EOF
 
-sudo docker exec -i postgres psql -U $DB_USERNAME -d $DB_NAME <<-EOF
+psql -U postgres -d $DB_NAME <<-EOF
 create table session_manager (
   id serial PRIMARY KEY NOT NULL,
   session VARCHAR(260) NOT NULL
